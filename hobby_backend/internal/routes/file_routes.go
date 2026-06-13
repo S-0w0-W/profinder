@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"hobby_backend/internal/handlers"
+	"profinder_backend/internal/handlers"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"

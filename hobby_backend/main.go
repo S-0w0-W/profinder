@@ -2,28 +2,37 @@ package main
 
 import (
 	"context"
-	db "hobby_backend/internal/migration_handler"
-	"hobby_backend/internal/routes"
 	"log"
+	"os"
+	"os/signal"
+	"profinder_backend/internal/chat"
+	db "profinder_backend/internal/migration_handler"
+	"profinder_backend/internal/routes"
 
 	"github.com/gin-gonic/gin"
+	"github.com/redis/go-redis/v9"
 )
 
 func main() {
-    ctx := context.Background()
-    pool, err := db.ConnectDB(ctx)
-    if err != nil {
-        log.Fatal(err)
-    }
-    defer pool.Close()
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer cancel()
 
-    err = db.RunMigrations(ctx, pool)
+	pool, err := db.ConnectDB(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer pool.Close()
 
-    c := gin.Default()
+	err = db.RunMigrations(ctx, pool)
 
-    routes.FileRoutes(c, pool)
+	c := gin.Default()
 
-    // db.RunMigrations(postgres_db)
+	rc := redis.NewClient(&redis.Options{Addr: "localhost:6379"})
+	hub := chat.NewHub(rc)
+	hub.Run(ctx)
 
-    c.Run(":8080")
+	routes.ChatRoutes(c, hub)
+	routes.FileRoutes(c, pool)
+
+	c.Run(":8090")
 }
