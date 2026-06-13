@@ -19,4 +19,4 @@ build/
 coverage/
 
 # Ignore Air's generated temporary binary used for Go live reload.
-tmp/
+**/tmp
