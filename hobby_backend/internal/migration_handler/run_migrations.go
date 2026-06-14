@@ -22,7 +22,7 @@ type DSN struct {
 }
 
 func ConnectDB(ctx context.Context) (*pgxpool.Pool, error) {
-	godotenv.Load("D:/projects/websites2/.env")
+	godotenv.Load("../.env")
 	dsn := DSN{
 		host:     os.Getenv("DB_HOST_LOCAL"),
 		port:     os.Getenv("DB_PORT"),
