@@ -27,9 +27,9 @@ func main() {
 
 	c := gin.Default()
 
-	rc := redis.NewClient(&redis.Options{Addr: "localhost:6379"})
+	rc := redis.NewClient(&redis.Options{Addr: "redis:6379"})
 	hub := chat.NewHub(rc)
-	hub.Run(ctx)
+	go hub.Run(ctx)
 
 	routes.ChatRoutes(c, hub)
 	routes.FileRoutes(c, pool)

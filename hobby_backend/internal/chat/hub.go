@@ -39,16 +39,17 @@ func (h *Hub) Run(ctx context.Context){
 		}
 	}()
 
-	go func() {
-		for {
-			select{
-				case newClient := <-h.Register:
-					h.Clients[newClient] = true
-				case client := <-h.Unregister:
-					delete(h.Clients, client)
-				case msg := <-h.MsgQueue:
-					h.RC.Publish(ctx, "chat", msg)
-			}
+	// go func() {
+	for {
+		println("in hub run loop")
+		select{
+			case newClient := <-h.Register:
+				h.Clients[newClient] = true
+			case client := <-h.Unregister:
+				delete(h.Clients, client)
+			case msg := <-h.MsgQueue:
+				h.RC.Publish(ctx, "chat", msg)
 		}
-	}()
+	}
+	// }()
 }

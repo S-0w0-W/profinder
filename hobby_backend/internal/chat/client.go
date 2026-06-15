@@ -26,10 +26,11 @@ func (c *Client) SendMsg(){
 
 	for {
 		_, msg, err := c.WebSocketConnection.ReadMessage()
-			if err != nil {
-				break
-			}
-			c.Hub.MsgQueue <- msg
+		println("in SendMsg loop")
+		if err != nil {
+			break
+		}
+		c.Hub.MsgQueue <- msg
 	}
 }
 

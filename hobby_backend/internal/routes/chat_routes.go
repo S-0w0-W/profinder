@@ -12,6 +12,6 @@ func ChatRoutes(c *gin.Engine, h *chat.Hub) {
 	ChatHandler := handlers.NewChatHandler(h)
 
 	fmt.Println("in chatroutes")
-	c.GET("/chat", ChatHandler.Connect)
-	c.GET("/chat_test", ChatHandler.ChatTest)
+	ChatGroup := c.Group("/chat")
+	ChatGroup.GET("/public", ChatHandler.PublicChat)
 }

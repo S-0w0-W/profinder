@@ -29,6 +29,10 @@ services:
     command: sh -c "npm install && npm run dev -- --host"
     environment:
       - VITE_API_URL=/api # relative, since nginx proxies it
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
   backend:
     image: cosmtrek/air # air is available as an image
     working_dir: /app
@@ -39,6 +43,8 @@ services:
     env_file:
       - ".env"
     command: sh -c "go mod download && air"
+    depends_on:
+      - redis
 
 volumes:
   go-mod-cache:
